@@ -156,8 +156,24 @@
     );
     return dec.decode(plain);
   }
+  function installJarvisReturn() {
+    if (!document.body || document.getElementById('jarvis-return')) return;
+    const link = document.createElement('a');
+    link.id = 'jarvis-return';
+    link.href = 'https://jarvis-chat-hud.cgwiz2001.chatgpt.site/';
+    link.textContent = '← Back to Jarvis';
+    link.setAttribute('aria-label', 'Return to the Jarvis menu');
+    link.style.cssText = 'position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));z-index:2147483647;display:inline-flex;align-items:center;min-height:46px;padding:10px 16px;border:1px solid #32d9eb;border-radius:999px;background:#071a26;color:#d9fbff;font:600 14px/1.2 system-ui,sans-serif;text-decoration:none;box-shadow:0 0 18px rgba(0,218,241,.22);';
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      try { window.close(); } catch (error) { /* Some browsers disallow closing this tab. */ }
+      window.setTimeout(() => window.location.assign(link.href), 150);
+    });
+    document.body.appendChild(link);
+  }
   function openDash(html) {
     document.open(); document.write(html); document.close();
+    installJarvisReturn();
   }
 
   function bioAvailable() {
@@ -308,6 +324,7 @@
     document.getElementById('sub').textContent = 'Password-protected · Petula';
     ok('Touch ID forgotten on this device.');
   });
+  installJarvisReturn();
   init();
   </script>
 </body>
