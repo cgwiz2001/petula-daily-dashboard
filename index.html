@@ -171,8 +171,33 @@
     });
     document.body.appendChild(link);
   }
+  function hideDashboardHeaderSummary() {
+    const header = [...document.querySelectorAll('header')].find((item) =>
+      [...item.querySelectorAll('h1, h2, [role="heading"]')].some((heading) => /^\s*Daily Dashboard\b/i.test(heading.textContent || ''))
+    );
+    if (!header) return;
+    let current = [...header.querySelectorAll('h1, h2, [role="heading"]')].find((heading) => /^\s*Daily Dashboard\b/i.test(heading.textContent || ''));
+    while (current && current !== header) {
+      let sibling = current.nextSibling;
+      while (sibling) {
+        const next = sibling.nextSibling;
+        if (sibling.nodeType === 1 && !/^(SCRIPT|STYLE)$/.test(sibling.tagName)) {
+          sibling.hidden = true;
+          sibling.style.setProperty('display', 'none', 'important');
+        } else if (sibling.nodeType === 3 && sibling.textContent.trim()) {
+          const wrapper = document.createElement('span');
+          wrapper.hidden = true;
+          sibling.parentNode.replaceChild(wrapper, sibling);
+          wrapper.appendChild(sibling);
+        }
+        sibling = next;
+      }
+      current = current.parentElement;
+    }
+  }
   function openDash(html) {
     document.open(); document.write(html); document.close();
+    hideDashboardHeaderSummary();
     installJarvisReturn();
   }
 
